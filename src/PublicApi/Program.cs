@@ -1,4 +1,5 @@
 ﻿using System;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using BlazorShared;
 using FastEndpoints;
 using FastEndpoints.Swagger;
@@ -14,7 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NimblePros.Metronome;
-using Azure.Monitor.OpenTelemetry.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,7 +68,6 @@ var app = builder.Build();
 app.Logger.LogInformation("PublicApi App created...");
 
 await app.SeedDatabaseAsync();
-throw new Exception("Cannot move further");
 
 if (app.Environment.IsDevelopment())
 {

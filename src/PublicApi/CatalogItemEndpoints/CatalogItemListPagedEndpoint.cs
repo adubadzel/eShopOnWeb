@@ -38,7 +38,6 @@ public class CatalogItemListPagedEndpoint(IRepository<CatalogItem> itemRepositor
 
         logger.LogInformation("Total number of catalog items: {TotalItems}", totalItems);
 
-        throw new Exception("Cannot move further");
         var pagedSpec = new CatalogFilterPaginatedSpecification(
             skip: request.PageIndex * request.PageSize,
             take: request.PageSize,

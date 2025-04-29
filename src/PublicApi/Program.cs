@@ -70,6 +70,13 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+var port = Environment.GetEnvironmentVariable("PORT");
+if (port != null)
+{
+    // web app startup helth check
+    app.Urls.Add($"http://*:{port}");
+}
+
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();

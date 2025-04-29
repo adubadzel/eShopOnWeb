@@ -105,6 +105,12 @@ if (!string.IsNullOrEmpty(catalogBaseUrl))
     });
 }
 
+var port = Environment.GetEnvironmentVariable("PORT");
+if (port != null)
+{
+    // web app startup helth check
+    app.Urls.Add($"http://*:{port}");
+}
 
 app.UseCustomHealthChecks();
 

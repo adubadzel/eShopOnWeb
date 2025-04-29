@@ -1,4 +1,5 @@
-﻿using BlazorShared;
+﻿using System;
+using BlazorShared;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Builder;
@@ -67,6 +68,7 @@ var app = builder.Build();
 app.Logger.LogInformation("PublicApi App created...");
 
 await app.SeedDatabaseAsync();
+throw new Exception("Cannot move further");
 
 if (app.Environment.IsDevelopment())
 {

@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.Infrastructure.Data;
 using Microsoft.eShopWeb.Infrastructure.Identity;
+using Microsoft.eShopWeb.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NimblePros.Metronome;
 
 namespace Microsoft.eShopWeb.Infrastructure;
 
@@ -51,5 +53,10 @@ public static class Dependencies
                 options.AddInterceptors(provider.GetRequiredService<DbCallCountingInterceptor>());
             });
         }
+    }
+
+    public static void ConfigureOrderItemRequestorHttpClient(this IServiceCollection services, Uri baseUrl)
+    {
+        services.AddHttpClient<IOrderItemsReserver, OrderItemsReserver>(c => c.BaseAddress = baseUrl);
     }
 }

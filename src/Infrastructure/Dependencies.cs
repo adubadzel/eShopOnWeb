@@ -57,6 +57,8 @@ public static class Dependencies
 
     public static void ConfigureOrderItemRequestorHttpClient(this IServiceCollection services, Uri baseUrl)
     {
-        services.AddHttpClient<IOrderItemsReserver, OrderItemsReserver>(c => c.BaseAddress = baseUrl);
+        services.AddScoped<OrderItemsReserverAuthHandler>();
+        services.AddHttpClient<IOrderItemsReserver, OrderItemsReserver>(c => c.BaseAddress = baseUrl)
+            .AddHttpMessageHandler<OrderItemsReserverAuthHandler>();
     }
 }

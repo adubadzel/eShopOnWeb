@@ -23,3 +23,12 @@ internal sealed class OrderItemsReserver(HttpClient httpClient) : IOrderItemsRes
         response.EnsureSuccessStatusCode();
     }
 }
+
+internal sealed class OrderItemsReserverAuthHandler(IConfiguration configuration) : DelegatingHandler
+{
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        request.Headers.Add("x-functions-key", configuration["warehouseapi:key"]);
+        return await base.SendAsync(request, cancellationToken);
+    }
+}

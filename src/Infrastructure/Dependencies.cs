@@ -6,6 +6,7 @@ using Microsoft.eShopWeb.Infrastructure.Identity;
 using Microsoft.eShopWeb.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.eShopWeb.Infrastructure;
 
@@ -57,8 +58,15 @@ public static class Dependencies
 
     public static void ConfigureOrderItemRequestorHttpClient(this IServiceCollection services, Uri baseUrl)
     {
-        services.AddScoped<OrderItemsReserverAuthHandler>();
+        services.TryAddScoped<OrderItemsReserverAuthHandler>();
         services.AddHttpClient<IOrderItemsReserver, OrderItemsReserver>(c => c.BaseAddress = baseUrl)
+            .AddHttpMessageHandler<OrderItemsReserverAuthHandler>();
+    }
+
+    public static void ConfigureEventSenders(this IServiceCollection services, Uri baseUrl)
+    {
+        services.TryAddScoped<OrderItemsReserverAuthHandler>();
+        services.AddHttpClient<IOrderCreatedEventSender, OrderCreatedEventSender>(c => c.BaseAddress = baseUrl)
             .AddHttpMessageHandler<OrderItemsReserverAuthHandler>();
     }
 }

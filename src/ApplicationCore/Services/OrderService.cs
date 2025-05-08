@@ -14,6 +14,7 @@ public class OrderService : IOrderService
     private readonly IRepository<Order> _orderRepository;
     private readonly IUriComposer _uriComposer;
     private readonly IOrderItemsReserver _orderItemsReserver;
+    private readonly IOrderCreatedEventSender _orderCreatedEventSender;
     private readonly IRepository<Basket> _basketRepository;
     private readonly IRepository<CatalogItem> _itemRepository;
 
@@ -21,11 +22,13 @@ public class OrderService : IOrderService
         IRepository<CatalogItem> itemRepository,
         IRepository<Order> orderRepository,
         IUriComposer uriComposer,
-        IOrderItemsReserver orderItemsReserver)
+        IOrderItemsReserver orderItemsReserver,
+        IOrderCreatedEventSender orderCreatedEventSender)
     {
         _orderRepository = orderRepository;
         _uriComposer = uriComposer;
         _orderItemsReserver = orderItemsReserver;
+        _orderCreatedEventSender = orderCreatedEventSender;
         _basketRepository = basketRepository;
         _itemRepository = itemRepository;
     }
@@ -54,5 +57,6 @@ public class OrderService : IOrderService
         await _orderRepository.AddAsync(order);
 
         await _orderItemsReserver.ReserveFor(order);
+        await _orderCreatedEventSender.SendAsync(order);
     }
 }

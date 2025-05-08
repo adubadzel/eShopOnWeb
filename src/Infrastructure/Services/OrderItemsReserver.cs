@@ -28,7 +28,8 @@ internal sealed class OrderItemsReserverAuthHandler(IConfiguration configuration
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        request.Headers.Add("x-functions-key", configuration["warehouseapi:key"]);
+        if (!request.Headers.Contains("x-functions-key"))
+            request.Headers.Add("x-functions-key", configuration["warehouseapi:key"]);
         return await base.SendAsync(request, cancellationToken);
     }
 }

@@ -4,11 +4,11 @@ using Microsoft.Azure.Functions.Worker.Http;
 
 namespace Warehouse;
 
-public record Order(int OrderId, OrderItem[] OrderItems);
-public record OrderItem(int CatalogItemId, int Quantity);
-
 public class OrderItemsReserver
 {
+    public record Order(int OrderId, OrderItem[] OrderItems);
+    public record OrderItem(int CatalogItemId, int Quantity);
+
     [Function(nameof(OrderItemsReserver))]
     [BlobOutput("order-items-reservation/{OrderId}")]
     public OrderItem[] Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req, [FromBody] Order order)

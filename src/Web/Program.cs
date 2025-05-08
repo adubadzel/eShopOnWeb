@@ -1,4 +1,5 @@
-﻿using Ardalis.ListStartupServices;
+﻿using System;
+using Ardalis.ListStartupServices;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
@@ -88,7 +89,8 @@ builder.Services.AddBlazor(builder.Configuration);
 builder.Services.AddMetronome();
 builder.AddSeqEndpoint(connectionName: "seq");
 
-builder.Services.AddOpenTelemetry().UseAzureMonitor();
+if (!builder.Environment.IsDevelopment())
+    builder.Services.AddOpenTelemetry().UseAzureMonitor();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

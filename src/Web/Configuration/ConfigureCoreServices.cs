@@ -19,6 +19,7 @@ public static class ConfigureCoreServices
         BaseUrlConfiguration baseUrlConfiguration = new();
         configuration.GetSection(BaseUrlConfiguration.CONFIG_NAME).Bind(baseUrlConfiguration);
         services.ConfigureOrderItemRequestorHttpClient(new Uri(baseUrlConfiguration.WarehouseApiBase));
+        services.ConfigureEventSenders(new Uri(baseUrlConfiguration.WarehouseApiBase));
 
         services.AddScoped<IBasketService, BasketService>();
         services.AddScoped<IOrderService, OrderService>();

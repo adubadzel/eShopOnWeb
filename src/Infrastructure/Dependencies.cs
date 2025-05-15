@@ -7,6 +7,8 @@ using Microsoft.eShopWeb.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Azure;
+using Azure.Messaging.ServiceBus;
 
 namespace Microsoft.eShopWeb.Infrastructure;
 
@@ -56,17 +58,19 @@ public static class Dependencies
         }
     }
 
-    public static void ConfigureOrderItemRequestorHttpClient(this IServiceCollection services, Uri baseUrl)
+    public static void ConfigureOrderItemRequestorHttpClient(this IServiceCollection services, IConfiguration configuration)
     {
-        services.TryAddScoped<OrderItemsReserverAuthHandler>();
-        services.AddHttpClient<IOrderItemsReserver, OrderItemsReserver>(c => c.BaseAddress = baseUrl)
-            .AddHttpMessageHandler<OrderItemsReserverAuthHandler>();
+        services.AddAzureClients(clientBuilder =>
+        {
+            clientBuilder.AddServiceBusClientWithNamespace(configuration["ServiceBus:Namespace"]);
+        });
+        services.TryAddSingleton<IOrderItemsReserver, OrderItemsReserver>();
     }
 
     public static void ConfigureEventSenders(this IServiceCollection services, Uri baseUrl)
     {
-        services.TryAddScoped<OrderItemsReserverAuthHandler>();
+        services.TryAddScoped<WarehouseApiAuthHandler>();
         services.AddHttpClient<IOrderCreatedEventSender, OrderCreatedEventSender>(c => c.BaseAddress = baseUrl)
-            .AddHttpMessageHandler<OrderItemsReserverAuthHandler>();
+            .AddHttpMessageHandler<WarehouseApiAuthHandler>();
     }
 }

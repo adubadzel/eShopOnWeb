@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Azure.Messaging;
 using Azure.Messaging.ServiceBus;
 using Microsoft.eShopWeb.ApplicationCore.Entities.OrderAggregate;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
@@ -17,13 +17,6 @@ internal sealed class OrderItemsReserver(ServiceBusClient serviceBusClient) : IO
     public async Task ReserveFor(Order order)
     {
         OrderReservation details = new(order.Id, [.. order.OrderItems.Select(i => new OrderItemReservation(i.ItemOrdered.CatalogItemId, i.Units))]);
-        var cloudEvent = new CloudEvent(
-            "/eshoponweb/web",
-            "eShopWeb.OrderReservation",
-            details);
-        await queueSender.SendMessageAsync(new ServiceBusMessage(new BinaryData(cloudEvent))
-        {
-            ContentType = "application/cloudevents+json"
-        });
+        await queueSender.SendMessageAsync(new ServiceBusMessage(new BinaryData(details, JsonSerializerOptions.Web)));
     }
 }

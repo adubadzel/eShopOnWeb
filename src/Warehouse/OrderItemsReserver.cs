@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Ardalis.GuardClauses;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
 
 namespace Warehouse;
 
@@ -11,9 +10,10 @@ public class OrderItemsReserver
 
     [Function(nameof(OrderItemsReserver))]
     [BlobOutput("order-items-reservation/{OrderId}")]
-    public OrderItem[] Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req, [FromBody] Order order)
+    public OrderItem[] Run([ServiceBusTrigger("reserve-for-order", Connection = "ServiceBusConnection")] Order order)
     {
         // TODO validate, transform
+        Guard.Against.Null(order);
         return order.OrderItems;
     }
 }

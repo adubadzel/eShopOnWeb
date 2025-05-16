@@ -87,7 +87,9 @@ builder.Services.Configure<ServiceConfig>(config =>
 builder.Services.AddBlazor(builder.Configuration);
 
 builder.Services.AddMetronome();
-builder.AddSeqEndpoint(connectionName: "seq");
+
+if (builder.Environment.IsDevelopment())
+    builder.AddSeqEndpoint(connectionName: "seq");
 
 if (!builder.Environment.IsDevelopment())
     builder.Services.AddOpenTelemetry().UseAzureMonitor();

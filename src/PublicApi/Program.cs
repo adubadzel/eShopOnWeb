@@ -56,12 +56,14 @@ builder.Services.AddSwagger();
 builder.Services.AddMetronome();
 string seqUrl = builder.Configuration["Seq:ServerUrl"] ?? "http://localhost:5341";
 
-builder.AddSeqEndpoint(connectionName: "seq", options =>
-{
-    options.ServerUrl = seqUrl;
-});
+if (builder.Environment.IsDevelopment())
+    builder.AddSeqEndpoint(connectionName: "seq", options =>
+    {
+        options.ServerUrl = seqUrl;
+    });
 
-builder.Services.AddOpenTelemetry().UseAzureMonitor();
+if (!builder.Environment.IsDevelopment())
+    builder.Services.AddOpenTelemetry().UseAzureMonitor();
 
 var app = builder.Build();
 
